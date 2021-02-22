@@ -8,9 +8,11 @@ export default function App() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "rgb(233,122,155)",
+
       }}
     >
-      <Text>Universal React with Expo</Text>
+      <Text>Universal React with Expo, Ya Raja</Text>
     </View>
   );
 }
