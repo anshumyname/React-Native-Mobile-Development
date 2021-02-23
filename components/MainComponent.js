@@ -6,6 +6,8 @@ import { View, Platform } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import Contact  from './ContactComponent';
+import About from './AboutComponent';
 
 const Stack = createStackNavigator();
 const Stack2 = createStackNavigator();
@@ -19,6 +21,7 @@ function MyNavigator() {
     }} >
       <Stack.Screen name="Menu" component={Menu} />
       <Stack.Screen name="DishDetail" component={DishDetail} />
+      
     </Stack.Navigator>
   )
 }
@@ -36,6 +39,9 @@ function DrawerNavigator(){
     <Drawer.Navigator initialRouteName="Home" drawerStyle={{ backgroundColor: '#D1C4E9'}} screenOptions={{headerStyle: {backgroundColor: '#512DAB'}}}>
       <Drawer.Screen name="Home" component={HomeNavigator} />
       <Drawer.Screen name="Menu" component={MyNavigator} />
+      <Drawer.Screen  name="About Us" component={About} />
+      <Drawer.Screen  name="Contact Us" component={Contact} />
+      
     </Drawer.Navigator>
   )
 }

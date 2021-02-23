@@ -35,7 +35,7 @@ class  Menu extends Component {
             );
         };
         const { navigate } = this.props.navigation;
-        console.log(navigate)
+        
         return (
             <FlatList
                 data={this.state.dishes}
