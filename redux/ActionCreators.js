@@ -1,81 +1,78 @@
 import * as ActionTypes from './ActionTypes';
-import { baseUrl} from '../shared/baseURL';
-import { comments } from './comments';
+import { baseURL } from '../shared/baseURL';
 
-export const fetchComments =  () => (dispatch) => {
-    return fetch(baseUrl+'comments')
-        .then(response => {
-            if(response.ok){
-                return response;
-            }
-            else{
-                var err = new Error('Error' + response.status + ':' + response.text);
-                error.response = err;
-                throw error;
-            }
-        },
-        error => {
-            var errMess =new Error(error.message);
-            throw errMess;
-        })
-        .then(response => response.json())
-        .then(comments => dispatch(addComments(comments)))
-        .catch(error => dispatch(commentsFailed(error.message)));
-}
+export const fetchComments = () => (dispatch) => {
+    return fetch(baseURL + 'comments')
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+      })
+    .then(response => response.json())
+    .then(comments => dispatch(addComments(comments)))
+    .catch(error => dispatch(commentsFailed(error.message)));
+};
 
-export const commentsFailed =  (errMess) => ({
+export const commentsFailed = (errmess) => ({
     type: ActionTypes.COMMENTS_FAILED,
-    payload: errMess,
-})
+    payload: errmess
+});
 
-export const addComments = (comments) => {
+export const addComments = (comments) => ({
     type: ActionTypes.ADD_COMMENTS,
     payload: comments
-}
+});
 
-export const fetchDishes =  () => (dispatch) => {
+export const fetchDishes = () => (dispatch) => {
+
     dispatch(dishesLoading());
-    return fetch(baseUrl+'dishes')
-        .then(response => {
-            if(response.ok){
-                return response;
-            }
-            else{
-                var err = new Error('Error' + response.status + ':' + response.text);
-                error.response = err;
-                throw error;
-            }
-        },
-        error => {
-            var errMess =new Error(error.message);
-            throw errMess;
-        })
-        .then(response => response.json())
-        .then(dihes => dispatch(addDishes(dishes)))
-        .catch(error => dispatch(DishesFailed(error.message)));
-}
 
-export const dishesLoading() => ({
-     type: ActionTypes.DISHES_LOADING
-})
+    return fetch(baseURL + 'dishes')
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+      })
+    .then(response => response.json())
+    .then(dishes => dispatch(addDishes(dishes)))
+    .catch(error => dispatch(dishesFailed(error.message)));
+};
 
-export const addDishes =(dishes)=> ({
-    type: ActionTypes.ADD_DISHES,
-    payload: dishes,
-})
+export const dishesLoading = () => ({
+    type: ActionTypes.DISHES_LOADING
+});
 
-export const DishesFailed = (errMess) =>{
+export const dishesFailed = (errmess) => ({
     type: ActionTypes.DISHES_FAILED,
-    payload: errMess
-}
+    payload: errmess
+});
 
-
+export const addDishes = (dishes) => ({
+    type: ActionTypes.ADD_DISHES,
+    payload: dishes
+});
 
 export const fetchPromos = () => (dispatch) => {
     
     dispatch(promosLoading());
 
-    return fetch(baseUrl + 'promotions')
+    return fetch(baseURL + 'promotions')
     .then(response => {
         if (response.ok) {
             return response;
@@ -111,8 +108,8 @@ export const addPromos = (promos) => ({
 export const fetchLeaders = () => (dispatch) => {
     
     dispatch(leadersLoading());
-
-    return fetch(baseUrl + 'leaders')
+    console.log("dekh dekh dekh " + baseURL + 'leaders');
+    return fetch(baseURL + 'leaders')
     .then(response => {
         if (response.ok) {
             return response;

@@ -10,6 +10,26 @@ import { SafeAreaView } from 'react-navigation';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
 import { Icon } from 'react-native-elements';
+import { baseURL } from '../shared/baseURL';
+import { connect} from 'react-redux';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders} from '../redux/ActionCreators';
+
+const mapStateToProps = state => {
+  return {
+      dishes: state.dishes,
+      promotions : state.promotions,
+      leaders: state.leaders
+  }
+}
+
+
+const mapDispatchtoProps = dipatch => ({
+   fetchDishes: () => dipatch(fetchDishes()),
+   fetchComments: () => dipatch(fetchComments()),
+   fetchPromos: () => dipatch(fetchPromos()),
+   fetchLeaders: () => dipatch(fetchLeaders()),
+
+});
 
 const Stack = createStackNavigator();
 const Stack2 = createStackNavigator();
@@ -72,6 +92,14 @@ const CustomDrawerContentComponent = (props) => {
 
 class Main extends Component {
 
+
+  componentDidMount() {
+     this.props.fetchComments();
+     this.props.fetchDishes();
+     this.props.fetchLeaders();
+     this.props.fetchPromos();
+  }
+
   render() {
 
     return (
@@ -108,5 +136,5 @@ const styles = StyleSheet.create({
 
 })
 
-export default Main;
+export default connect(mapStateToProps,mapDispatchtoProps)(Main);
 
