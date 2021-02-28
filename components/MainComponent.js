@@ -13,6 +13,7 @@ import { Icon } from 'react-native-elements';
 import { baseURL } from '../shared/baseURL';
 import { connect} from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders} from '../redux/ActionCreators';
+import  Reservation  from './ReservationComponent';
 
 const mapStateToProps = state => {
   return {
@@ -64,6 +65,7 @@ function DrawerNavigator( {navigation}) {
       <Drawer.Screen name="Menu" component={MyNavigator} options={{ drawerIcon: (_, color) => <Icon name='list' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="About Us" component={About} options={{ drawerIcon: (_, color) => <Icon name='info-circle' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="Contact Us" component={Contact} options={{ drawerIcon: (_, color) => <Icon name='address-card' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Reserve Table" component={Reservation} options={{ drawerIcon: (_, color) => <Icon name='cutlery' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
 
     </Drawer.Navigator>
   )
