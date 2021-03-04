@@ -26,6 +26,14 @@ function RenderDish(props) {
 
     handleViewRef = ref => this.view = ref;
 
+    const recognizeComment = ({moveX, moveY, dx, dy}) => {
+        if(dx > 20 )
+            return true;
+        else{
+            return false;
+        }
+    }
+
     const recognizeDrag = ({ moveX, moveY , dx, dy}) => {
         if(dx < -200 ) 
             return true;
@@ -52,7 +60,11 @@ function RenderDish(props) {
                     ],
                     {canelabel: false}
                 )
-
+            if(recognizeComment(gestureState)){
+                    console.log('yea ya  ya a a fuckking recognized');
+                    props.toggleModal();
+            }
+            
             return true;
         }
     })
