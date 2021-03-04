@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button } from 'react-native';
-import { Card, Rating, Input } from 'react-native-elements';
+import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button , Alert, PanResponder} from 'react-native';
+import { Card, Rating, Input} from 'react-native-elements';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseURL } from '../shared/baseURL';
@@ -23,9 +23,37 @@ const mapDispatchtoProps = dispatch => ({
 
 function RenderDish(props) {
     const dish = props.dish;
+
+    const recognizeDrag = ({ moveX, moveY , dx, dy}) => {
+        if(dx < -200 ) 
+            return true;
+        else 
+            return false
+    }
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: (e , gestureState) => {
+            return true;
+        },
+        onPanResponderEnd: (e, gestureState) => {
+            if (recognizeDrag(gestureState))
+                Alert.alert(
+                    'Add to favorites',
+                    'Are you sure you wish to add to add ' + dish.name + 'to your favorites',
+                    [
+                        { text: 'cancel' , onPress : () => console.log('Cancel pressed'), style:"cancel"},
+                        { text: 'OK', onPress: () => props.favorite ? console.log('Already favorite') : props.onPress()}
+                    ],
+                    {canelabel: false}
+                )
+
+            return true;
+        }
+    })
+
     if (dish != null) {
         return (
-            <Animatable.View animation="fadeInDown" duration={2000} delay={1000} >
+            <Animatable.View animation="fadeInDown" duration={2000} delay={1000} 
+                    {... panResponder.panHandlers}>
                 <Card featuredTitle={dish.name} image={{ uri: baseURL + dish.image }} >
                     <Text stype={{ margin: 10 }}>
                         {dish.description}
