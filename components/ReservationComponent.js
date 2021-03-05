@@ -3,7 +3,9 @@ import { Text, View, ScrollView, StyleSheet, Switch, Button, Modal , Alert} from
 import { Picker } from '@react-native-community/picker';
 import { Card } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
-import DatePicker from 'react-native-datepicker'
+import DatePicker from 'react-native-datepicker';
+import * as Permissions from 'expo-permissions';
+import { Notifications } from 'expo';
 
 class Reservation extends Component {
 
@@ -45,17 +47,44 @@ class Reservation extends Component {
                 },
                 {
                     text: 'OK',
-                    onPress: () => this.resetForm(),
+                    onPress: () =>{ 
+                        this.presentLocalNotification(this.state.date);
+                        this.resetForm()
+                    },
                 }
             ],
             {cancelable: false}
         )
     }
 
+    async obtainNotificationPermission(){
+        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS);
+        if( permission.status !== 'granted'){
+            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
+            if( permission.status !== 'granted'){
+                Alert.alert('Permission not granted to show alert');
+            }
+        }
+        return permission;
+    }
+
+    async presentLocalNotification(date) {
+        await this.obtainNotificationPermission(); 
+        Notifications.presentLocalNotificationAsync({
+            title:'Your Reservation',
+            body: 'Reservation for ' + date + ' requested',
+            android: {
+                sound: true,
+                vibrate: true,
+                color: '#512DA8'
+            }
+        })
+    }
+
     render() {
         return (
             <ScrollView>
-                <Animatable.View animation="zoomIn" duration={2000} delay={1000}>
+                <Animatable.View animation="zoomIn" duration={2000} delay={1000} useNativeDriver={true}>
                     <View style={styles.formRow}>
                         <Text style={styles.formLabel} >Number of Guests </Text>
                         <Picker

@@ -7,7 +7,7 @@ import * as Animatable from 'react-native-animatable';
 function Contact(props) {
     return (
         <ScrollView>
-            <Animatable.View animation="fadeInDown" duration={2000} delay={1000} >
+            <Animatable.View animation="fadeInDown" duration={2000} delay={1000} useNativeDriver={true}>
                 <Card title="Contact Information">
                     <Text>121, Clear Water Bay Road</Text>
                     <Text>Clear Water Bay, Kowloon</Text>

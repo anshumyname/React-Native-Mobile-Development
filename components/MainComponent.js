@@ -3,7 +3,7 @@ import Menu from './MenuComponent';
 import Home from './HomeComponent';
 import DishDetail from './DishdetailComponent';
 import { View, Platform, Image, StyleSheet, ScrollView, Text } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
 import { createDrawerNavigator,DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView } from 'react-navigation';
@@ -15,6 +15,7 @@ import { connect} from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders} from '../redux/ActionCreators';
 import  Reservation  from './ReservationComponent';
 import Favorite from './FavoriteComponent';
+import Login from './LoginComponent';
 
 const mapStateToProps = state => {
   return {
@@ -62,12 +63,13 @@ function HomeNavigator() {
 function DrawerNavigator( {navigation}) {
   return (
     <Drawer.Navigator initialRouteName="Home" drawerStyle={{ backgroundColor: '#D1C4E9' }} screenOptions={{ headerStyle: { backgroundColor: '#512DAB' } }} drawerContent={(props) => <CustomDrawerContentComponent {...props} />}>
-      <Drawer.Screen name="Home" component={HomeNavigator} options={{ drawerIcon: (_, color) => <Icon name='home' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Login" component={Login} options={{ drawerIcon: (_, color) => <Icon name='sign-in' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Home" component={HomeNavigator} options={{ drawerIcon: (_, color) => <Icon name='home' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()}  />}} />
       <Drawer.Screen name="Menu" component={MyNavigator} options={{ drawerIcon: (_, color) => <Icon name='list' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="About Us" component={About} options={{ drawerIcon: (_, color) => <Icon name='info-circle' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="Contact Us" component={Contact} options={{ drawerIcon: (_, color) => <Icon name='address-card' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="Reserve Table" component={Reservation} options={{ drawerIcon: (_, color) => <Icon name='cutlery' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="MyFavorites" component={Favorite} options={{ drawerIcon: (_, color) => <Icon name='heart' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="MyFavorites" component={Favorite} options={{ drawerIcon: (_, color) => <Icon name='heart' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} />, header:{ headerTitle: 'head'} }} />
 
     </Drawer.Navigator>
   )

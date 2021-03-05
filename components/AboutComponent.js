@@ -32,9 +32,7 @@ class About extends Component {
 
 
 
-    static navigationOptions = {
-        title: "About Us"
-    }
+    static options = {title: "About Us"};
 
 
     render() {
@@ -64,7 +62,7 @@ class About extends Component {
         else if (this.props.leaders.errMess) {
             return (
                 <ScrollView>
-                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000} >
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000} useNativeDriver={true}>
                         <History />
                         <Card title="Corporate Leadership">
                             <Text>{this.props.leaders.errMess}</Text>
@@ -79,7 +77,7 @@ class About extends Component {
 
             return (
                 <ScrollView style={{ flex: 1 , }}>
-                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000} >
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000} useNativeDriver={true}>
                         <History />
                         
                         <Card title="Corporate Leadership">
