@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button , Alert, PanResponder} from 'react-native';
+import { View, Text, ScrollView, FlatList, Modal, StyleSheet, Button , Alert, PanResponder, Share} from 'react-native';
 import { Card, Rating, Input} from 'react-native-elements';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -7,6 +7,7 @@ import { baseURL } from '../shared/baseURL';
 import { postFavorite, postmyComment } from '../redux/ActionCreators';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import * as Animatable from 'react-native-animatable';
+
 
 const mapStateToProps = state => {
     return {
@@ -69,6 +70,16 @@ function RenderDish(props) {
         }
     })
 
+    const shareDish = (title , message, url) => {
+        Share.share({
+            title: title,
+            message: title + ':' + message +' ' +url,
+            url: url
+        },{
+            dialogTitle: 'Share '+ title
+        });
+    }
+
     if (dish != null) {
         return (
             <Animatable.View animation="fadeInDown" duration={2000} delay={1000} useNativeDriver={true}
@@ -78,7 +89,7 @@ function RenderDish(props) {
                     <Text stype={{ margin: 10 }}>
                         {dish.description}
                     </Text>
-                    <View style={{ flex: 1, flexDirection: "row" }}>
+                    <View style={{ flex: 1, flexDirection: "row" , justifyContent: 'center'}}>
                         <Icon
                             raised
                             reverse
@@ -94,6 +105,15 @@ function RenderDish(props) {
                             type="font-awesome"
                             color="#512DA8"
                             onPress={() => props.toggleModal()}
+                        />
+                        <Icon 
+                            raised
+                            reverse
+                            name= 'share'
+                            type='font-awesome'
+                            color="#51D2A8"
+                            style={styles.cardItem}
+                            onPress= { () => shareDish(dish.name, dish.description, baseURL+dish.image)}
                         />
                     </View>
                 </Card>
@@ -226,6 +246,10 @@ const styles = StyleSheet.create({
         margin: 20,
         padding: 10,
     },
+    cardItem: {
+        justifyContent: 'center'
+    }
+    ,
     modalTitle: {
         fontSize: 24,
         fontWeight: 'bold',
