@@ -62,14 +62,14 @@ function HomeNavigator() {
 
 function DrawerNavigator( {navigation}) {
   return (
-    <Drawer.Navigator initialRouteName="Home" drawerStyle={{ backgroundColor: '#D1C4E9' }} screenOptions={{ headerStyle: { backgroundColor: '#512DAB' } }} drawerContent={(props) => <CustomDrawerContentComponent {...props} />}>
-      <Drawer.Screen name="Login" component={Login} options={{ drawerIcon: (_, color) => <Icon name='sign-in' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+    <Drawer.Navigator initialRouteName="Home" drawerStyle={{ backgroundColor: '#D1C4E9' }} screenOptions={{ headerStyle: { backgroundColor: 'light-red', headerTintColor: 'white', color: 'white' },}} drawerContent={(props) => <CustomDrawerContentComponent {...props} />}>
+      <Drawer.Screen name="Login" component={Login} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='sign-in' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="Home" component={HomeNavigator} options={{ drawerIcon: (_, color) => <Icon name='home' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()}  />}} />
       <Drawer.Screen name="Menu" component={MyNavigator} options={{ drawerIcon: (_, color) => <Icon name='list' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="About Us" component={About} options={{ drawerIcon: (_, color) => <Icon name='info-circle' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="Contact Us" component={Contact} options={{ drawerIcon: (_, color) => <Icon name='address-card' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="Reserve Table" component={Reservation} options={{ drawerIcon: (_, color) => <Icon name='cutlery' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="MyFavorites" component={Favorite} options={{ drawerIcon: (_, color) => <Icon name='heart' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} />, header:{ headerTitle: 'head'} }} />
+      <Drawer.Screen name="About Us" component={About} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='info-circle' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Contact Us" component={Contact} options={{ headerShown:true, drawerIcon: (_, color) => <Icon name='address-card' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Reserve Table" component={Reservation} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='cutlery' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="MyFavorites" component={Favorite} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='heart' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
 
     </Drawer.Navigator>
   )

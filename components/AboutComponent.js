@@ -32,7 +32,7 @@ class About extends Component {
 
 
 
-    static options = {title: "About Us"};
+    static screenOptions = {header: "About Us"};
 
 
     render() {
