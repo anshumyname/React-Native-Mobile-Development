@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, Switch, Button, Modal , Alert} from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Switch, Button, Modal, Alert } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import { Card } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import DatePicker from 'react-native-datepicker';
 import * as Permissions from 'expo-permissions';
 import { Notifications } from 'expo';
+import * as Calendar from 'expo-calendar';
+import { CALENDAR } from 'expo-permissions';
 
 class Reservation extends Component {
 
@@ -16,7 +18,8 @@ class Reservation extends Component {
             smoking: false,
             date: new Date(),
             showDatePicker: false,
-            showModal: false
+            showModal: false,
+            calendarId: 'null'
         }
     }
 
@@ -35,6 +38,68 @@ class Reservation extends Component {
         });
     }
 
+    async getcalenderid() {
+
+        if(this.state.calendarId !== 'null'){
+            return this.state.id;
+        }
+
+        const defaultCalendarSource =
+
+            Platform.OS === 'ios'
+
+                ? await getDefaultCalendarSource()
+
+                : { isLocalAccount: true, name: 'Expo Calendar' };
+
+        let details = {
+
+            title: 'Con Fusion Table Reservation',
+
+            source: defaultCalendarSource,
+
+            name: 'internalCalendarName',
+
+            color: 'blue',
+
+            entityType: Calendar.EntityTypes.EVENT,
+
+            sourceId: defaultCalendarSource.id,
+
+            ownerAccount: 'personal',
+
+            accessLevel: Calendar.CalendarAccessLevel.OWNER,
+
+        }
+        
+        const id =  await Calendar.createCalendarAsync(details);
+        this.setState({calendarId: id});
+        return id;
+        
+    }
+
+    async setCalender(date) {
+        await this.obtainCalenderPermission();
+        
+        const calendarId = await this.getcalenderid()
+        console.log("calednar created calendar id " , calendarId);
+        console.log(date);
+        console.log(Date.parse(date,"DD-MM-YYYY"));
+        const newevent = await Calendar.createEventAsync(calendarId, {
+            title: 'Con Fusion Table Reservation',
+  
+            startDate: new Date(Date.parse(date)),
+            
+            endDate: new Date(Date.parse(date) + 2*60*60*1000),
+            
+            timeZone: 'Asia/Hong_Kong',
+            
+            location: '121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong'
+        });
+        console.log('event created with id' , newevent);
+
+    }
+
     handleReservation() {
         Alert.alert(
             'Your Reservation OK?',
@@ -47,31 +112,42 @@ class Reservation extends Component {
                 },
                 {
                     text: 'OK',
-                    onPress: () =>{ 
+                    onPress: () => {
                         this.presentLocalNotification(this.state.date);
+                        this.setCalender(this.state.date);
                         this.resetForm()
                     },
                 }
             ],
-            {cancelable: false}
+            { cancelable: false }
         )
     }
 
-    async obtainNotificationPermission(){
+    async obtainNotificationPermission() {
         let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS);
-        if( permission.status !== 'granted'){
+        if (permission.status !== 'granted') {
             permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
-            if( permission.status !== 'granted'){
-                Alert.alert('Permission not granted to show alert');
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted to show notification');
             }
         }
         return permission;
     }
 
+    async obtainCalenderPermission() {
+        let permission = await Calendar.requestCalendarPermissionsAsync()
+        if (permission.status !== 'granted') {
+            permission = await Calendar.requestCalendarPermissionsAsync();
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted to set calender');
+            }
+        }
+        return permission;
+    }
     async presentLocalNotification(date) {
-        await this.obtainNotificationPermission(); 
+        await this.obtainNotificationPermission();
         Notifications.presentLocalNotificationAsync({
-            title:'Your Reservation',
+            title: 'Your Reservation',
             body: 'Reservation for ' + date + ' requested',
             android: {
                 sound: true,
@@ -111,7 +187,7 @@ class Reservation extends Component {
                             date={this.state.date}
                             mode="date"
                             placeholder="select date"
-                            format="DD-MM-YYYY"
+                            format="YYYY-MM-DD"
                             confirmBtnText="Confirm"
                             cancelBtnText="Cancel"
                             customStyles={{
@@ -134,7 +210,7 @@ class Reservation extends Component {
                         />
                     </View>
                 </Animatable.View>
-                
+
             </ScrollView>
         )
     }
