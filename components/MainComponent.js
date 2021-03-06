@@ -2,35 +2,38 @@ import React, { Component } from 'react';
 import Menu from './MenuComponent';
 import Home from './HomeComponent';
 import DishDetail from './DishdetailComponent';
-import { View, Platform, Image, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, Platform, Image, StyleSheet, ToastAndroid, Text } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
-import { createDrawerNavigator,DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView } from 'react-navigation';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
 import { Icon } from 'react-native-elements';
 import { baseURL } from '../shared/baseURL';
-import { connect} from 'react-redux';
-import { fetchDishes, fetchComments, fetchPromos, fetchLeaders} from '../redux/ActionCreators';
-import  Reservation  from './ReservationComponent';
+import { connect } from 'react-redux';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+import Reservation from './ReservationComponent';
 import Favorite from './FavoriteComponent';
 import Login from './LoginComponent';
 
 const mapStateToProps = state => {
   return {
-      dishes: state.dishes,
-      promotions : state.promotions,
-      leaders: state.leaders
+    dishes: state.dishes,
+    promotions: state.promotions,
+    leaders: state.leaders
   }
 }
 
 
 const mapDispatchtoProps = dipatch => ({
-   fetchDishes: () => dipatch(fetchDishes()),
-   fetchComments: () => dipatch(fetchComments()),
-   fetchPromos: () => dipatch(fetchPromos()),
-   fetchLeaders: () => dipatch(fetchLeaders()),
+  fetchDishes: () => dipatch(fetchDishes()),
+  fetchComments: () => dipatch(fetchComments()),
+  fetchPromos: () => dipatch(fetchPromos()),
+  fetchLeaders: () => dipatch(fetchLeaders()),
+
+
 
 });
 
@@ -60,16 +63,16 @@ function HomeNavigator() {
   )
 }
 
-function DrawerNavigator( {navigation}) {
+function DrawerNavigator({ navigation }) {
   return (
-    <Drawer.Navigator initialRouteName="Home" drawerStyle={{ backgroundColor: '#D1C4E9' }} screenOptions={{ headerStyle: { backgroundColor: 'light-red', headerTintColor: 'white', color: 'white' },}} drawerContent={(props) => <CustomDrawerContentComponent {...props} />}>
-      <Drawer.Screen name="Login" component={Login} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='sign-in' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="Home" component={HomeNavigator} options={{ drawerIcon: (_, color) => <Icon name='home' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()}  />}} />
+    <Drawer.Navigator initialRouteName="Home" drawerStyle={{ backgroundColor: '#D1C4E9' }} screenOptions={{ headerStyle: { backgroundColor: 'light-red', headerTintColor: 'white', color: 'white' }, }} drawerContent={(props) => <CustomDrawerContentComponent {...props} />}>
+      <Drawer.Screen name="Login" component={Login} options={{ headerShown: true, drawerIcon: (_, color) => <Icon name='sign-in' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Home" component={HomeNavigator} options={{ drawerIcon: (_, color) => <Icon name='home' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
       <Drawer.Screen name="Menu" component={MyNavigator} options={{ drawerIcon: (_, color) => <Icon name='list' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="About Us" component={About} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='info-circle' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="Contact Us" component={Contact} options={{ headerShown:true, drawerIcon: (_, color) => <Icon name='address-card' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="Reserve Table" component={Reservation} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='cutlery' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
-      <Drawer.Screen name="MyFavorites" component={Favorite} options={{ headerShown:true,drawerIcon: (_, color) => <Icon name='heart' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="About Us" component={About} options={{ headerShown: true, drawerIcon: (_, color) => <Icon name='info-circle' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Contact Us" component={Contact} options={{ headerShown: true, drawerIcon: (_, color) => <Icon name='address-card' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="Reserve Table" component={Reservation} options={{ headerShown: true, drawerIcon: (_, color) => <Icon name='cutlery' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
+      <Drawer.Screen name="MyFavorites" component={Favorite} options={{ headerShown: true, drawerIcon: (_, color) => <Icon name='heart' type="font-awesome" size={24} color={color} onPress={() => navigation.toggleDrawer()} /> }} />
 
     </Drawer.Navigator>
   )
@@ -98,12 +101,59 @@ const CustomDrawerContentComponent = (props) => {
 
 class Main extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: null,
+      isConnected: null
+    }
+  }
 
   componentDidMount() {
-     this.props.fetchComments();
-     this.props.fetchDishes();
-     this.props.fetchLeaders();
-     this.props.fetchPromos();
+    this.props.fetchComments();
+    this.props.fetchDishes();
+    this.props.fetchLeaders();
+    this.props.fetchPromos();
+    NetInfo.fetch().then((connectionInfo) => {
+      ToastAndroid.show('Initial Network Connectivity Type: '
+        + connectionInfo.type, ToastAndroid.LONG);
+      this.setState({ type: connectionInfo.type });
+    });
+    //Subscribing to network updates
+    this.netinfoUnsubscribe = NetInfo.addEventListener(this.handleConnectivityChange);
+  }
+
+  componentWillUnmount() {
+    if (this.netinfoUnsubscribe) {
+      this.netinfoUnsubscribe();
+      this.netinfoUnsubscribe = null;
+    }
+  }
+
+  handleConnectivityChange = (connectionInfo) => {
+    if (connectionInfo.type !== this.state.type) {
+      this.setState({ type: connectionInfo.type });
+      this.setState({ isConnected: connectionInfo.isConnected });
+      switch (this.state.type) {
+        case 'none':
+          ToastAndroid.show('You are now offline!', ToastAndroid.LONG);
+          break;
+        case 'wifi':
+          ToastAndroid.show('You are now connected to WiFi!', ToastAndroid.LONG);
+          break;
+        case 'cellular':
+          ToastAndroid.show('You are now connected to Cellular!', ToastAndroid.LONG);
+          break;
+        case 'unknown':
+          ToastAndroid.show('You now have unknown connection!', ToastAndroid.LONG);
+          break;
+        default:
+          break;
+      }
+    }
+    else {
+      null;
+    }
   }
 
   render() {
@@ -142,5 +192,5 @@ const styles = StyleSheet.create({
 
 })
 
-export default connect(mapStateToProps,mapDispatchtoProps)(Main);
+export default connect(mapStateToProps, mapDispatchtoProps)(Main);
 
